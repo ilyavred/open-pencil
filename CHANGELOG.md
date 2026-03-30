@@ -9,10 +9,35 @@
 - Nested container navigation — each double-click goes one level deeper
 - Dashed border around entered container for visual feedback
 - Layer panel click syncs canvas scope automatically
+- Vue SDK internationalization primitives — `useI18n()`, locale detection, persisted locale selection, lazy-loaded locale JSON files, and exported locale metadata for custom editor shells
+- App language picker in the menu bar — switch UI locale without reloading
+- Added a vector curve editor and improved drawing experience with the pen tool
+- Resume pen drawing from existing open path endpoints — click an endpoint to continue the curve
+- Close open paths by dragging one endpoint to the other
+- Align selected anchor points relative to each other in vector edit mode — the standard alignment buttons in the position panel now operate on selected vertices when 2 or more are selected
+- Unified core IO format registry — `.fig` is now modeled as the native document format alongside shared export adapters for PNG, JPG, WEBP, SVG, and JSX
+- Export selection or current page as `.fig` from the app export UI and app menu
+- New CLI commands: `open-pencil convert` for document conversion, `open-pencil formats` to inspect readable/writable/exportable formats, and `open-pencil lint` for design consistency, structure, and accessibility checks
+- CLI export now supports `.fig` output and routes PNG/JPG/WEBP/SVG/JSX/`.fig` through the shared IO layer
+- `Open…` now supports `.pen` Pencil documents through the shared document reader pipeline while keeping `.fig` as the native save format
+- Display‑P3 document color space pipeline — documents now default to Display‑P3, `.fig` import/export preserves document color profiles, the live canvas requests P3 surfaces with sRGB fallback, and raster/SVG export paths accept explicit color-space targets
+- Color picker overhaul — unified `RGB` / `HSL` / `HSB` / `OkHCL` field formats, slider-space-aware track/thumb previews, and better neutral-color editing behavior for fills, strokes, gradient stops, and component fills
+- OkHCL metadata now round-trips through `.fig` plugin data and integrates directly into the main fill/stroke color workflow with preview gamut diagnostics
+- Vue SDK now exposes reusable color-picker model helpers and solid fill/stroke commit helpers for custom editor shells
+- Update built-in Z.ai and MiniMax model lists — Z.ai now uses the Anthropic-compatible endpoint for GLM coding models, adds GLM-5.1, and MiniMax adds M2.7 / M2.7-highspeed
+- Arabic and RTL support across text rendering, editing, layout, export, and AI tooling — text nodes support `Auto`/`LTR`/`RTL`, auto-layout frames support `Auto`/`LTR`/`RTL` flow, and JSX/AI prompts/tools can now generate and edit both explicitly
 
 ### Fixes
 
+- Fix shortcuts, now work on non-English keyboard layouts.
 - Fix imported `.fig` file open and page-switch regressions — loaded documents now keep graph/store state in sync, remap imported canvas/page children correctly, and recompute imported auto-layout descendants when switching pages
+- Fix first canvas render happening before fonts load — wait for fonts before the initial draw to avoid Safari and text measurement glitches
+- Preserve `fig-kiwi` version on `.fig` roundtrip — imports keep the original header version instead of rewriting everything to a hardcoded value; new files default to version 101
+- Normalize auto-layout text export for Figma — text children inside auto-layout frames now serialize with `NONE` auto-resize to match Figma behavior and avoid overflow on reimport
+- Fix keyboard editing regressions after the refactor — canvas shortcuts no longer fire while editing text, and Delete/Backspace no longer delete nodes during text entry
+- Fix MCP page switching persistence — `switch_page` now survives across tool calls in the same session
+- Improve CJK font fallback coverage — load multiple Google Fonts for broader Han/Japanese/Korean text support
+- Normalize more visible UI strings for localized app chrome — menus, panels, variables dialog, code panel, chat setup, and editor controls now respect the selected locale instead of falling back to English in common flows
 - Fix imported text rendering in browser and headless export — preserve stored bounds until fonts are ready, restore missing font-loaded guards, use natural width for `WIDTH_AND_HEIGHT` text, and clip text to node bounds
 - Fix browser/headless rendering mismatch for imported toolbar/instance content by correcting runtime imported layout recomputation instead of diverging browser rendering behavior
 - Fix `set_layout` tool not defaulting to HUG sizing when enabling auto-layout — frames now shrink/grow to fit children instead of keeping fixed dimensions
@@ -25,6 +50,7 @@
 - Locked containers block double-click enter
 - Marquee selection skips locked and hidden nodes
 - COMPONENT/INSTANCE containers are now enterable via double-click
+- Replaced the alignment and reflection icons with the correct ones
 
 ## 0.10.0 — 2026-03-15
 

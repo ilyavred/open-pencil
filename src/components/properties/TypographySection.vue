@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ToggleGroupItem, ToggleGroupRoot } from 'reka-ui'
 
-import { TypographyControlsRoot } from '@open-pencil/vue'
+import { TypographyControlsRoot, useI18n } from '@open-pencil/vue'
 
 import FontPicker from '@/components/FontPicker.vue'
 import ScrubInput from '@/components/ScrubInput.vue'
@@ -9,12 +9,14 @@ import AppSelect from '@/components/ui/AppSelect.vue'
 import Tip from '@/components/ui/Tip.vue'
 import { sectionWrapper } from '@/components/ui/section'
 import { loadFont } from '@/engine/fonts'
+
+const { panels } = useI18n()
 </script>
 
 <template>
   <TypographyControlsRoot v-slot="ctx" :load-font="loadFont">
     <div v-if="ctx.node.value" data-test-id="typography-section" :class="sectionWrapper()">
-      <label class="mb-1.5 block text-[11px] text-muted">Typography</label>
+      <label class="mb-1.5 block text-[11px] text-muted">{{ panels.typography }}</label>
 
       <div class="mb-1.5 flex items-center gap-1.5">
         <FontPicker
@@ -79,6 +81,19 @@ import { loadFont } from '@/engine/fonts'
             <icon-lucide-a-large-small class="size-3" />
           </template>
         </ScrubInput>
+      </div>
+
+      <div class="mb-1.5">
+        <label class="mb-1 block text-[11px] text-muted">{{ panels.direction }}</label>
+        <AppSelect
+          :model-value="ctx.node.value.textDirection"
+          :options="[
+            { value: 'AUTO', label: panels.auto },
+            { value: 'LTR', label: 'LTR' },
+            { value: 'RTL', label: 'RTL' }
+          ]"
+          @update:model-value="ctx.setDirection($event as 'AUTO' | 'LTR' | 'RTL')"
+        />
       </div>
 
       <div class="flex items-center gap-3">

@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { twMerge } from 'tailwind-merge'
 
-import { FillPickerRoot } from '@open-pencil/vue'
+import { applySolidFillColor, FillPickerRoot, useI18n } from '@open-pencil/vue'
 
 import GradientEditor from './GradientEditor.vue'
-import HsvColorArea from './HsvColorArea.vue'
+import ColorPickerPanel from './ColorPickerPanel.vue'
 import ImageFillPicker from './ImageFillPicker.vue'
 import Tip from './ui/Tip.vue'
 import { usePopoverUI } from './ui/popover'
 
 import type { Fill } from '@open-pencil/core'
+import type { OkHCLControls } from '@open-pencil/vue/ColorPicker/types'
 
 const TAB_BASE =
   'flex size-6 cursor-pointer items-center justify-center rounded border-none p-0 transition-colors'
@@ -21,9 +22,10 @@ function tabClass(active: boolean) {
   )
 }
 
-const { fill } = defineProps<{ fill: Fill }>()
+const { fill, okhcl = null } = defineProps<{ fill: Fill; okhcl?: OkHCLControls | null }>()
 const emit = defineEmits<{ update: [fill: Fill] }>()
 const cls = usePopoverUI({ content: 'w-60 p-2' })
+const { panels } = useI18n()
 </script>
 
 <template>
@@ -33,9 +35,16 @@ const cls = usePopoverUI({ content: 'w-60 p-2' })
     swatch-class="size-5 shrink-0 cursor-pointer rounded border border-border p-0"
     @update="emit('update', $event)"
   >
+    <template #trigger="{ style }">
+      <button
+        data-test-id="fill-picker-swatch"
+        class="size-5 shrink-0 cursor-pointer rounded border border-border p-0"
+        :style="style"
+      />
+    </template>
     <template #default="{ fill: currentFill, category, toSolid, toGradient, toImage, update }">
       <div class="mb-2 flex items-center gap-0.5">
-        <Tip label="Solid">
+        <Tip :label="panels.solid">
           <button
             :class="tabClass(category === 'SOLID')"
             data-test-id="fill-picker-tab-solid"
@@ -44,7 +53,7 @@ const cls = usePopoverUI({ content: 'w-60 p-2' })
             <icon-lucide-square class="size-3.5" />
           </button>
         </Tip>
-        <Tip label="Gradient">
+        <Tip :label="panels.linearGradient">
           <button
             :class="tabClass(category === 'GRADIENT')"
             data-test-id="fill-picker-tab-gradient"
@@ -53,7 +62,7 @@ const cls = usePopoverUI({ content: 'w-60 p-2' })
             <icon-lucide-blend class="size-3.5" />
           </button>
         </Tip>
-        <Tip label="Image">
+        <Tip :label="panels.image">
           <button
             :class="tabClass(category === 'IMAGE')"
             data-test-id="fill-picker-tab-image"
@@ -64,10 +73,11 @@ const cls = usePopoverUI({ content: 'w-60 p-2' })
         </Tip>
       </div>
 
-      <HsvColorArea
+      <ColorPickerPanel
         v-if="category === 'SOLID'"
         :color="currentFill.color"
-        @update="update({ ...currentFill, color: $event })"
+        :okhcl="okhcl"
+        @update="update(applySolidFillColor(currentFill, $event))"
       />
 
       <GradientEditor v-if="category === 'GRADIENT'" :fill="currentFill" @update="update($event)" />

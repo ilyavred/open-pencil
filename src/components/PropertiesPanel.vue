@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { TabsContent, TabsList, TabsRoot, TabsTrigger } from 'reka-ui'
 
+import { useI18n } from '@open-pencil/vue'
 import { useAIChat } from '@/composables/use-chat'
-import { useEditorStore } from '@/stores/editor'
 
 import ChatPanel from './ChatPanel.vue'
 import CodePanel from './CodePanel.vue'
 import DesignPanel from './DesignPanel.vue'
+import ZoomDropdown from './ZoomDropdown.vue'
 
-const store = useEditorStore()
 const { activeTab } = useAIChat()
+const { panels } = useI18n()
 </script>
 
 <template>
@@ -25,7 +26,7 @@ const { activeTab } = useAIChat()
           data-test-id="properties-tab-design"
           class="rounded px-2.5 py-1 text-xs text-muted hover:text-surface data-[state=active]:font-semibold data-[state=active]:text-surface"
         >
-          Design
+          {{ panels.design }}
         </TabsTrigger>
         <TabsTrigger
           value="code"
@@ -33,7 +34,7 @@ const { activeTab } = useAIChat()
           class="flex items-center gap-1 rounded px-2.5 py-1 text-xs text-muted hover:text-surface data-[state=active]:font-semibold data-[state=active]:text-surface"
         >
           <icon-lucide-code class="size-3" />
-          Code
+          {{ panels.code }}
         </TabsTrigger>
         <TabsTrigger
           value="ai"
@@ -41,15 +42,9 @@ const { activeTab } = useAIChat()
           class="flex items-center gap-1 rounded px-2.5 py-1 text-xs text-muted hover:text-surface data-[state=active]:font-semibold data-[state=active]:text-surface"
         >
           <icon-lucide-sparkles class="size-3" />
-          AI
+          {{ panels.ai }}
         </TabsTrigger>
-        <span
-          v-if="activeTab === 'design'"
-          data-test-id="properties-zoom"
-          class="ml-auto cursor-pointer rounded px-1.5 py-0.5 text-[11px] text-muted hover:bg-hover"
-        >
-          {{ Math.round(store.state.zoom * 100) }}%
-        </span>
+        <ZoomDropdown v-if="activeTab === 'design'" />
       </TabsList>
 
       <TabsContent

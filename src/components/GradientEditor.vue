@@ -1,15 +1,21 @@
 <script setup lang="ts">
 import AppSelect from './ui/AppSelect.vue'
 import Tip from './ui/Tip.vue'
-import HsvColorArea from './HsvColorArea.vue'
+import ColorPickerPanel from './ColorPickerPanel.vue'
 import ScrubInput from './ScrubInput.vue'
 import { colorToCSS } from '@open-pencil/core'
-import { GradientEditorRoot, GradientEditorBar, GradientEditorStop } from '@open-pencil/vue'
+import {
+  GradientEditorRoot,
+  GradientEditorBar,
+  GradientEditorStop,
+  useI18n
+} from '@open-pencil/vue'
 
 import type { Fill } from '@open-pencil/core'
 
 const { fill } = defineProps<{ fill: Fill }>()
 const emit = defineEmits<{ update: [fill: Fill] }>()
+const { panels } = useI18n()
 </script>
 
 <template>
@@ -52,8 +58,8 @@ const emit = defineEmits<{ update: [fill: Fill] }>()
 
       <div class="mb-2">
         <div class="mb-1 flex items-center justify-between">
-          <span class="text-[11px] text-muted">Stops</span>
-          <Tip label="Add stop">
+          <span class="text-[11px] text-muted">{{ panels.stops }}</span>
+          <Tip :label="panels.addStop">
             <button
               class="flex size-4 cursor-pointer items-center justify-center rounded border-none bg-transparent p-0 text-muted hover:text-surface"
               data-test-id="fill-picker-add-stop"
@@ -122,7 +128,7 @@ const emit = defineEmits<{ update: [fill: Fill] }>()
         </GradientEditorStop>
       </div>
 
-      <HsvColorArea :color="root.activeColor" @update="root.updateActiveColor" />
+      <ColorPickerPanel :color="root.activeColor" @update="root.updateActiveColor" />
     </div>
   </GradientEditorRoot>
 </template>

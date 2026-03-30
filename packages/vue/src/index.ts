@@ -52,9 +52,10 @@ export { useTypography } from './controls/useTypography'
 export type { UseTypographyOptions } from './controls/useTypography'
 export { useExport } from './controls/useExport'
 export { useFillControls } from './controls/useFillControls'
-export { useFillVariableBinding } from './controls/useFillVariableBinding'
+export { useColorVariableBinding } from './controls/useColorVariableBinding'
 export { useEffectsControls } from './controls/useEffectsControls'
 export { useStrokeControls } from './controls/useStrokeControls'
+export { useOkHCL } from './controls/useOkHCL'
 
 /** Variables, page navigation, and picker helpers. */
 export { useVariables } from './VariablesEditor/useVariables'
@@ -69,7 +70,25 @@ export { useFontPicker } from './FontPicker/useFontPicker'
 /** Headless structural primitives and their local contexts. */
 export { CanvasRoot, CanvasSurface, useCanvasContext } from './Canvas'
 export type { CanvasContext } from './Canvas'
-export { ColorInputRoot, ColorPickerRoot } from './ColorPicker'
+export {
+  ColorInputRoot,
+  ColorPickerRoot,
+  createColorPickerModel,
+  createOkHCLSliderGradientModel,
+  createOkHCLSliderPreviewModel,
+  createSliderGradientModel,
+  createSliderPreviewModel,
+  fromPercent,
+  rekaToAppColor,
+  toPercent,
+  updateAlpha,
+  updateHSBChannel,
+  updateHSLChannel,
+  updateHue,
+  updateRGBChannel,
+  applySolidFillColor,
+  applySolidStrokeColor
+} from './ColorPicker'
 export { FillPickerRoot } from './FillPicker'
 export { FontPickerRoot } from './FontPicker'
 export { GradientEditorRoot, GradientEditorBar, GradientEditorStop } from './GradientEditor'
@@ -86,3 +105,16 @@ export type { ScrubInputContext } from './ScrubInput'
 export { TypographyControlsRoot } from './TypographyControls'
 export { ToolbarRoot, ToolbarItem, useToolbar } from './Toolbar'
 export type { ToolbarContext } from './Toolbar'
+
+/** Internationalization. */
+export { useI18n } from './i18n'
+export { locale, localeSetting, setLocale, AVAILABLE_LOCALES, LOCALE_LABELS } from './i18n'
+export type { Locale } from './i18n'
+export {
+  menuMessages,
+  commandMessages,
+  toolMessages,
+  panelMessages,
+  pageMessages,
+  dialogMessages
+} from './i18n'

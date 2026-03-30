@@ -4,24 +4,25 @@ import ColorInput from '@/components/ColorInput.vue'
 import ScrubInput from '@/components/ScrubInput.vue'
 import { iconButton } from '@/components/ui/icon-button'
 import { sectionLabel, sectionWrapper } from '@/components/ui/section'
-import { PropertyListRoot, useEffectsControls } from '@open-pencil/vue'
+import { PropertyListRoot, useEffectsControls, useI18n } from '@open-pencil/vue'
 
 import { colorToCSS } from '@open-pencil/core'
 
 import type { Effect } from '@open-pencil/core'
 
 const effectsCtx = useEffectsControls()
+const { panels } = useI18n()
 </script>
 
 <template>
   <PropertyListRoot
     v-slot="{ items, isMixed, activeNode, patch, add, remove, toggleVisibility }"
     prop-key="effects"
-    label="Effects"
+    :label="panels.effects"
   >
     <div data-test-id="effects-section" :class="sectionWrapper()">
       <div class="flex items-center justify-between">
-        <label :class="sectionLabel()">Effects</label>
+        <label :class="sectionLabel()">{{ panels.effects }}</label>
         <button
           data-test-id="effects-section-add"
           :class="iconButton()"
@@ -31,12 +32,12 @@ const effectsCtx = useEffectsControls()
         </button>
       </div>
 
-      <p v-if="isMixed" class="text-[11px] text-muted">Click + to replace mixed effects</p>
+      <p v-if="isMixed" class="text-[11px] text-muted">{{ panels.mixedEffectsHelp }}</p>
 
       <div
         v-for="(effect, i) in items as Effect[]"
-        :key="i"
-        data-test-id="effects-item"
+        :key="`${i}:${effect.visible ? 'visible' : 'hidden'}`"
+        data-test-id="effect-item"
         :data-test-index="i"
       >
         <div class="group flex items-center gap-1.5 py-0.5">
@@ -63,6 +64,7 @@ const effectsCtx = useEffectsControls()
           />
 
           <button
+            :data-test-id="`effect-visibility-${i}`"
             class="cursor-pointer border-none bg-transparent p-0 text-muted hover:text-surface"
             @click="toggleVisibility(i)"
           >
